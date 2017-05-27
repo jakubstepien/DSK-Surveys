@@ -1,4 +1,5 @@
-﻿using Surveys.WCFServices.DataContracts;
+﻿using Surveys.Utils;
+using Surveys.WCFServices.DataContracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,19 +19,25 @@ namespace Surveys.WCFServices
         public void Vote(VoteContract msg)
         {
             var service = new Services.SurveyService();
-            service.AddVote(new Models.VoteModel { IdVote = msg.IdVote, IdAnswer = msg.IdAnswer });
+            service.AddVote(msg.GetModel());
         }
 
+        public void AddSurvey(SurveyContract survey)
+        {
+            var service = new Services.SurveyService();
+            service.AddSurvey(survey.GetModel());
+        }
+
+
+
+
+        #region ChannelMethods
         public void StartService()
         {
-            //Instantiate new ServiceHost
             host = new ServiceHost(this);
-            //Open ServiceHost
             host.Open();
-            //Create a ChannelFactory and load the configuration setting
             channelFactory = new ChannelFactory<ISurveyExchangeService>("SurveyExchangeServiceEndpoint");
             Channel = channelFactory.CreateChannel();
-            //Lets others know that someone new has joined
         }
         public void StopService()
         {
@@ -43,5 +50,6 @@ namespace Surveys.WCFServices
                 }
             }
         }
+        #endregion
     }
 }

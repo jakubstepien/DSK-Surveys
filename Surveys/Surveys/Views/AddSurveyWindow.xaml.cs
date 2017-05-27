@@ -44,11 +44,6 @@ namespace Surveys.Views
                     EndDateUTC = DateTime.Now.AddYears(10),
                     Answers = answers
                 };
-                var service = new Services.SurveyService();
-
-                //TODO jezeli sie nie doda
-                service.AddSurvey(AddedSurvey);
-
                 this.Close();
             }
             else

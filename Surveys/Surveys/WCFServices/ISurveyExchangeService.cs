@@ -13,5 +13,8 @@ namespace Surveys.WCFServices
     {
         [OperationContract(IsOneWay = true)]
         void Vote(VoteContract msg);
+
+        [OperationContract(IsOneWay = true)]
+        void AddSurvey(SurveyContract survey);
     }
 }

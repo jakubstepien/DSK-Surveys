@@ -102,6 +102,7 @@
     <Compile Include="Services\ISurveyService.cs" />
     <Compile Include="Services\Logger.cs" />
     <Compile Include="Services\SurveyService.cs" />
+    <Compile Include="Utils\ContractModelConverter.cs" />
     <Compile Include="Utils\ForeachHelper.cs" />
     <Compile Include="ViewModels\AddSurveyViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
@@ -118,6 +119,8 @@
     <Compile Include="Views\SurveyView.xaml.cs">
       <DependentUpon>SurveyView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WCFServices\DataContracts\AnswerContract.cs" />
+    <Compile Include="WCFServices\DataContracts\SurveyContract.cs" />
     <Compile Include="WCFServices\DataContracts\VoteContract.cs" />
     <Compile Include="WCFServices\ISurveyExchangeService.cs" />
     <Compile Include="WCFServices\SurveyExchangeService.cs" />

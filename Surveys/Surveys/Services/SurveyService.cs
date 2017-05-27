@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Surveys.Models;
 using Surveys.Data;
+using Surveys.WCFServices.DataContracts;
 
 namespace Surveys.Services
 {

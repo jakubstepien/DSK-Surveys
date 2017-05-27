@@ -1,4 +1,5 @@
 ﻿using Surveys.Models;
+using Surveys.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Surveys.Views
 {
@@ -26,6 +28,15 @@ namespace Surveys.Views
         public SurveyListView()
         {
             InitializeComponent();
+            LoadSurveys();
+            DispatcherTimer refreshListTimer = new DispatcherTimer();
+            refreshListTimer.Interval = TimeSpan.FromSeconds(30);
+            refreshListTimer.Tick += RefreshListTimer_Tick;
+            refreshListTimer.Start();
+        }
+
+        private void RefreshListTimer_Tick(object sender, EventArgs e)
+        {
             LoadSurveys();
         }
 
@@ -44,6 +55,7 @@ namespace Surveys.Views
             {
                 if (window.AddedSurvey != null)
                 {
+                    MainWindow.Channel.AddSurvey(window.AddedSurvey.GetContract());
                     surveys.Items.Add(new SurveyListItem { IdSurvey = window.AddedSurvey.IdSurvey, Name = window.AddedSurvey.Name });
                 }
             };

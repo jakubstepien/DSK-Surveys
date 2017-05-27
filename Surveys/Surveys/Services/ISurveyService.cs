@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Surveys.Models;
+using Surveys.WCFServices.DataContracts;
 
 namespace Surveys.Services
 {
