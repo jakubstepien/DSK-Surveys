@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Surveys.Views
 {
@@ -21,16 +22,40 @@ namespace Surveys.Views
     /// </summary>
     public partial class AnswersStatisticsView : UserControl
     {
+        Guid? surveyId = null;
+
         public AnswersStatisticsView()
         {
             InitializeComponent();
+            DispatcherTimer answersReloadTimer = new DispatcherTimer();
+            answersReloadTimer.Interval = TimeSpan.FromSeconds(10);
+            answersReloadTimer.Tick += AnswersReloadTimer_Tick;
+            answersReloadTimer.Start();
+        }
+
+        private void AnswersReloadTimer_Tick(object sender, EventArgs e)
+        {
+            ReloadResults();
         }
 
         public void LoadSurvey(SurveyModel survey)
         {
+            surveyId = survey.IdSurvey;
             statisticsList.Items.Clear();
-            var answers = survey.Answers.OrderByDescending(o => o.Votes).Select(s => new StatiscticModel { Text = s.Text , Votes = s.Votes, AnswerId = s.IdAnswer });
+            var answers = survey.Answers.OrderByDescending(o => o.Votes).Select(s => new StatiscticModel { Text = s.Text, Votes = s.Votes, AnswerId = s.IdAnswer });
             answers.ForEach(f => statisticsList.Items.Add(f));
+        }
+
+        public void ReloadResults()
+        {
+            if (surveyId.HasValue)
+            {
+                statisticsList.Items.Clear();
+                var service = new Services.SurveyService();
+                var answers = service.GetAnswers(surveyId.Value);
+                answers.ForEach(f => statisticsList.Items.Add(new StatiscticModel { Text = f.Text, Votes = f.Votes, AnswerId = f.IdAnswer }));
+                statisticsList.Items.Refresh();
+            }
         }
 
         public void AddVote(Guid answerId)

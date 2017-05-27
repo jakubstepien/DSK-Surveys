@@ -16,6 +16,8 @@ namespace Surveys.Services
 
         IEnumerable<SurveyListItem> GetSurveys();
 
+        IEnumerable<AnswerModel> GetAnswers(Guid surveyId);
+
         SurveyModel GetSurvey(Guid id);
     }
 }

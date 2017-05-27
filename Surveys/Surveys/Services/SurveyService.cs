@@ -60,26 +60,50 @@ namespace Surveys.Services
             }
         }
 
+        public IEnumerable<AnswerModel> GetAnswers(Guid surveyId)
+        {
+            using (var db = new SurveyDbContext())
+            {
+                var answers = db.Answer
+                    .AsNoTracking()
+                    .Where(w => w.IdSurvey == surveyId)
+                    .GroupJoin(db.Vote, l => l.IdAnswer, r => r.IdAnswer, (l, r) => new { Answer = l, Vote = r })
+                    .SelectMany(s => s.Vote.DefaultIfEmpty(), (s, votes) => new { Answer = s.Answer, Vote = votes })
+                    .GroupBy(g => g.Answer)
+                    .Select(s => new AnswerModel
+                    {
+                        IdSurvey = surveyId,
+                        IdAnswer = s.Key.IdAnswer,
+                        Text = s.Key.Text,
+                        Votes = s.Count(c => c.Vote != null)
+                    })
+                    .OrderByDescending(o => o.Votes);
+
+                return answers.ToArray();
+            }
+        }
+
         public SurveyModel GetSurvey(Guid id)
         {
             using (var db = new SurveyDbContext())
             {
                 var surveys = db.Survey
+                    .AsNoTracking()
                     .Where(w => w.IdSurvey == id)
                     .Join(db.Answer, l => l.IdSurvey, r => r.IdSurvey, (l, r) => new { Survey = l, Answer = r })
                     .GroupJoin(db.Vote, l => l.Answer.IdAnswer, r => r.IdAnswer, (l, r) => new { Survey = l.Survey, Answer = l.Answer, Vote = r })
                     .SelectMany(s => s.Vote.DefaultIfEmpty(), (s, votes) => new { Survey = s.Survey, Answer = s.Answer, Vote = votes })
                     .GroupBy(g => new { g.Survey, g.Answer })
                     .Select(s => new
-                     {
-                         IdSurv = s.Key.Survey.IdSurvey,
-                         SurvName = s.Key.Survey.Name,
-                         SurvDescr = s.Key.Survey.Description,
-                         SurvEndDate = s.Key.Survey.EndDateUTC,
+                    {
+                        IdSurv = s.Key.Survey.IdSurvey,
+                        SurvName = s.Key.Survey.Name,
+                        SurvDescr = s.Key.Survey.Description,
+                        SurvEndDate = s.Key.Survey.EndDateUTC,
 
-                         AnswerModel = s.Key.Answer,
-                         Votes = s.Count(a => a.Vote != null)
-                     });
+                        AnswerModel = s.Key.Answer,
+                        Votes = s.Count(a => a.Vote != null)
+                    });
                 var queryReuslt = surveys.ToList();
                 var test = surveys.ToString();
 
