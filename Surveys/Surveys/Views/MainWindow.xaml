@@ -11,12 +11,9 @@
             <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0">
+        <DockPanel Grid.Column="0">
             <local:SurveyView  x:Name="surveyView"/>
-            <TextBox x:Name="resp" TextWrapping="Wrap" Height="48" AcceptsReturn="True"/>
-            <TextBox x:Name="testBox" />
-            <Button Click="send" Content="send"/>
-        </StackPanel>
+        </DockPanel>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions >
                 <RowDefinition Height="1*" />

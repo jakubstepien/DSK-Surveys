@@ -41,8 +41,7 @@ namespace Surveys.Views
             var checkedItem = answers.Items.OfType<Models.AnswerModel>().SingleOrDefault(s => s.IsChecked);
             if (checkedItem != null)
             {
-                var service = new Services.SurveyService();
-                service.AddVote(new Models.VoteModel { IdVote = Guid.NewGuid(), IdAnswer = checkedItem.IdAnswer,  IdSurvey = checkedItem.IdSurvey });
+                MainWindow.Channel.Vote(new WCFServices.DataContracts.VoteContract { IdVote = Guid.NewGuid(), IdAnswer = checkedItem.IdAnswer });
                 MainWindow.HandleVoted(checkedItem.IdAnswer);
             }
 

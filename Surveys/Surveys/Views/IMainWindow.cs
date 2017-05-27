@@ -12,5 +12,6 @@ namespace Surveys.Views
 
         void HandleVoted(Guid answerId);
 
+        WCFServices.ISurveyExchangeService Channel { get; }
     }
 }

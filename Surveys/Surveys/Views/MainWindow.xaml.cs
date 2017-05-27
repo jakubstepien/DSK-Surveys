@@ -25,6 +25,7 @@ namespace Surveys.Views
     {
         Guid? currentSurveyId;
         SurveyExchangeService serv = new SurveyExchangeService();
+        public ISurveyExchangeService Channel => serv.Channel;
 
         public MainWindow()
         {
@@ -32,7 +33,7 @@ namespace Surveys.Views
             //InsertTestData();
             //return;
             serv.StartService();
-            this.Closing += (sender, e) =>
+            Closing += (sender, e) =>
             {
                 serv.StopService();
             };
@@ -42,6 +43,7 @@ namespace Surveys.Views
             surveyListView.MainWindow = this;
             surveyView.MainWindow = this;
         }
+
 
         public void HandleVoted(Guid answerId)
         {
@@ -109,12 +111,6 @@ namespace Surveys.Views
             list.ForEach(f => service.AddSurvey(f));
             votes.ForEach(f => service.AddVote(f));
         }
-
-        private void send(object sender, RoutedEventArgs e)
-        {
-            serv.Channel.Say(testBox.Text);
-        }
-
      
     }
 }

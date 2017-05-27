@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Surveys.WCFServices.DataContracts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
@@ -14,9 +15,10 @@ namespace Surveys.WCFServices
         ServiceHost host = null;
         ChannelFactory<ISurveyExchangeService> channelFactory = null;
 
-        public void Say(string msg)
+        public void Vote(VoteContract msg)
         {
-            Console.WriteLine(msg);
+            var service = new Services.SurveyService();
+            service.AddVote(new Models.VoteModel { IdVote = msg.IdVote, IdAnswer = msg.IdAnswer });
         }
 
         public void StartService()
@@ -29,13 +31,11 @@ namespace Surveys.WCFServices
             channelFactory = new ChannelFactory<ISurveyExchangeService>("SurveyExchangeServiceEndpoint");
             Channel = channelFactory.CreateChannel();
             //Lets others know that someone new has joined
-            Channel.Say("Admin");
         }
         public void StopService()
         {
             if (host != null)
             {
-                Channel.Say("Admin");
                 if (host.State != CommunicationState.Closed)
                 {
                     channelFactory.Close();
