@@ -1,7 +1,9 @@
 ﻿using Surveys.Models;
+using Surveys.WCFServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,12 +24,18 @@ namespace Surveys.Views
     public partial class MainWindow : Window, IMainWindow
     {
         Guid? currentSurveyId;
+        SurveyExchangeService serv = new SurveyExchangeService();
 
         public MainWindow()
         {
             //Wrzucanie danych do pustej bazy
             //InsertTestData();
             //return;
+            serv.StartService();
+            this.Closing += (sender, e) =>
+            {
+                serv.StopService();
+            };
 
             InitializeComponent();
             surveyView.Visibility = Visibility.Collapsed;
@@ -101,5 +109,12 @@ namespace Surveys.Views
             list.ForEach(f => service.AddSurvey(f));
             votes.ForEach(f => service.AddVote(f));
         }
+
+        private void send(object sender, RoutedEventArgs e)
+        {
+            serv.Channel.Say(testBox.Text);
+        }
+
+     
     }
 }
