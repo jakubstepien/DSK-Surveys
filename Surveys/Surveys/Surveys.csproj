@@ -120,6 +120,7 @@
       <DependentUpon>SurveyView.xaml</DependentUpon>
     </Compile>
     <Compile Include="WCFServices\DataContracts\AnswerContract.cs" />
+    <Compile Include="WCFServices\DataContracts\DirectedContract.cs" />
     <Compile Include="WCFServices\DataContracts\SurveyContract.cs" />
     <Compile Include="WCFServices\DataContracts\VoteContract.cs" />
     <Compile Include="WCFServices\ISurveyExchangeService.cs" />

@@ -13,7 +13,6 @@ namespace Surveys.Data
     {
         public SurveyDbContext() : base("defaultSqlLite")
         {
-            this.Database.Log = (a) => System.Diagnostics.Debug.WriteLine(a);
         }
 
         #region DbSets

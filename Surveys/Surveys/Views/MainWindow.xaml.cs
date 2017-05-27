@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Surveys.Views
 {
@@ -42,8 +43,17 @@ namespace Surveys.Views
             surveyView.Visibility = Visibility.Collapsed;
             surveyListView.MainWindow = this;
             surveyView.MainWindow = this;
+
+            DispatcherTimer hostsInfoRefresh = new DispatcherTimer();
+            hostsInfoRefresh.Interval = TimeSpan.FromSeconds(5);
+            hostsInfoRefresh.Tick += HostsInfoRefresh_Tick;
+            hostsInfoRefresh.Start();
         }
 
+        private void HostsInfoRefresh_Tick(object sender, EventArgs e)
+        {
+            hostsInfo.Content = "Total hosts: " + serv.HostNumber;
+        }
 
         public void HandleVoted(Guid answerId)
         {
