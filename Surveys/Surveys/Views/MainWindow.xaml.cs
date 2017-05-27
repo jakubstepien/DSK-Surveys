@@ -18,11 +18,22 @@ namespace Surveys.Views
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IMainWindow
     {
         public MainWindow()
         {
             InitializeComponent();
+            surveyView.Visibility = Visibility.Collapsed;
+            surveyListView.MainWindow = this;
+        }
+
+        public void LoadSurvey(Guid id)
+        {
+            var service = new Services.InMemorySurveyService();
+            var survey = service.GetSurvey(id);
+            surveyView.LoadSurvey(survey);
+            surveyView.Visibility = Visibility.Visible;
+            answersStatisticsView.LoadSurvey(survey);
         }
     }
 }

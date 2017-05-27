@@ -18,7 +18,7 @@
         <ListView x:Name="answers" Grid.Row="2" BorderThickness="0">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <RadioButton Content="{Binding Name}" IsChecked="{Binding IsChecked}" GroupName="surveyAnswers" />
+                    <RadioButton Content="{Binding Text}" IsChecked="{Binding IsChecked}" GroupName="surveyAnswers" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

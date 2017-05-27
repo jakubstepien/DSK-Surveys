@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Surveys.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,13 @@ namespace Surveys.Views
         public AnswersStatisticsView()
         {
             InitializeComponent();
+        }
+
+        public void LoadSurvey(SurveyModel survey)
+        {
+            statisticsList.Items.Clear();
+            var answers = survey.Answers.OrderByDescending(o => o.Votes).Select(s => new { Text = s.Text + ": " + s.Votes });
+            answers.ForEach(f => statisticsList.Items.Add(f));
         }
     }
 }

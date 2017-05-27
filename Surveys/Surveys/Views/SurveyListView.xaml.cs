@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Surveys.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,15 +21,35 @@ namespace Surveys.Views
     /// </summary>
     public partial class SurveyListView : UserControl
     {
+        public IMainWindow MainWindow { get; set; }
+
         public SurveyListView()
         {
             InitializeComponent();
-            Enumerable.Range(0, 10).Select(s => new { Name = "Name " + s }).ToList().ForEach(f => surveys.Items.Add(f));
+            LoadSurveys();
+        }
+
+        public void LoadSurveys()
+        {
+            var surveyService = new Services.InMemorySurveyService();
+            var items = surveyService.GetSurveys();
+            surveys.Items.Clear();
+            items.ForEach(f => surveys.Items.Add(f));
         }
 
         private void AddSurveyClick(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void SurveysSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //można zanaczyć tylko jeden więc wystarczy brac pierwszy
+            var selected = e.AddedItems.OfType<SurveyListItem>().FirstOrDefault();
+            if (selected != null)
+            {
+                MainWindow.LoadSurvey(selected.IdSurvey);
+            }
         }
     }
 }

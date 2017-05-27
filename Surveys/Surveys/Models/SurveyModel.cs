@@ -14,6 +14,8 @@ namespace Surveys.Models
 
         public string Description { get; set; }
 
-        
+        public DateTime EndDateUTC { get; set; }
+
+        public List<AnswerModel> Answers { get; set; }
     }
 }

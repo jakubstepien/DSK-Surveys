@@ -11,9 +11,5 @@ namespace Surveys.Models
         public Guid IdSurvey { get; set; }
 
         public string Name { get; set; }
-
-        public DateTime EndDateUTC { get; set; }
-
-        public List<AnswerModel> Answers { get; set; }
     }
 }

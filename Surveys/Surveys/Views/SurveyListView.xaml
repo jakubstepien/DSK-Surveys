@@ -13,7 +13,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Content="Wybierz ankiete" />
-        <ListView Grid.Row="1" x:Name="surveys" BorderThickness="0">
+        <ListView Grid.Row="1" x:Name="surveys" BorderThickness="0" SelectionChanged="SurveysSelectionChanged" SelectionMode="Single">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Label Content="{Binding Name}" />

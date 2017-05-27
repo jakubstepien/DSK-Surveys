@@ -56,12 +56,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\AnswerModel.cs" />
-    <Compile Include="Models\AnswerStatisticsItem.cs" />
     <Compile Include="Models\SurveyModel.cs" />
     <Compile Include="Models\SurveyListItem.cs" />
+    <Compile Include="Services\InMemorySurveyService.cs" />
+    <Compile Include="Services\ISurveyService.cs" />
+    <Compile Include="Utils\ForeachHelper.cs" />
     <Compile Include="Views\AnswersStatisticsView.xaml.cs">
       <DependentUpon>AnswersStatisticsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\IMainWindow.cs" />
     <Compile Include="Views\SurveyListView.xaml.cs">
       <DependentUpon>SurveyListView.xaml</DependentUpon>
     </Compile>
@@ -121,9 +124,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
