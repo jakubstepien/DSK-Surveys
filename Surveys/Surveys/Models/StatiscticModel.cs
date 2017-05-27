@@ -6,16 +6,14 @@ using System.Threading.Tasks;
 
 namespace Surveys.Models
 {
-    public class AnswerModel
+    class StatiscticModel
     {
-        public Guid IdAnswer { get; set; }
-
-        public Guid IdSurvey { get; set; }
+        public string Text { get; set; }
 
         public int Votes { get; set; }
 
-        public string Text { get; set; }
+        public string DisplayText { get { return Text + ": " + Votes; } }
 
-        public bool IsChecked { get; set; }
+        public Guid AnswerId { get; set; }
     }
 }

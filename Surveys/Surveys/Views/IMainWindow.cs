@@ -9,5 +9,8 @@ namespace Surveys.Views
     public interface IMainWindow
     {
         void LoadSurvey(Guid id);
+
+        void HandleVoted(Guid answerId);
+
     }
 }

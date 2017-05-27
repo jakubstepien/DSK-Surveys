@@ -29,8 +29,22 @@ namespace Surveys.Views
         public void LoadSurvey(SurveyModel survey)
         {
             statisticsList.Items.Clear();
-            var answers = survey.Answers.OrderByDescending(o => o.Votes).Select(s => new { Text = s.Text + ": " + s.Votes });
+            var answers = survey.Answers.OrderByDescending(o => o.Votes).Select(s => new StatiscticModel { Text = s.Text , Votes = s.Votes, AnswerId = s.IdAnswer });
             answers.ForEach(f => statisticsList.Items.Add(f));
+        }
+
+        public void AddVote(Guid answerId)
+        {
+            IEnumerable<StatiscticModel> items = statisticsList.Items.OfType<StatiscticModel>().ToList();
+            var item = items.SingleOrDefault(w => w.AnswerId == answerId);
+            if (item != null)
+            {
+                item.Votes++;
+            }
+            statisticsList.Items.Clear();
+            items = items.OrderByDescending(o => o.Votes);
+            items.ForEach(f => statisticsList.Items.Add(f));
+            statisticsList.Items.Refresh();
         }
     }
 }

@@ -15,7 +15,7 @@
         <ListView Grid.Row="1" x:Name="statisticsList" BorderThickness="0">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Label Content="{Binding Text}" />
+                    <Label Content="{Binding DisplayText}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

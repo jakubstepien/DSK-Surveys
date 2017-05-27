@@ -20,6 +20,9 @@ namespace Surveys.Views
     /// </summary>
     public partial class SurveyView : UserControl
     {
+        public IMainWindow MainWindow { get; set; }
+
+
         public SurveyView()
         {
             InitializeComponent();
@@ -35,6 +38,13 @@ namespace Surveys.Views
 
         private void SendClick(object sender, RoutedEventArgs e)
         {
+            var checkedItem = answers.Items.OfType<Models.AnswerModel>().SingleOrDefault(s => s.IsChecked);
+            if (checkedItem != null)
+            {
+                var service = new Services.SurveyService();
+                service.AddVote(new Models.VoteModel { IdVote = Guid.NewGuid(), IdAnswer = checkedItem.IdAnswer,  IdSurvey = checkedItem.IdSurvey });
+                MainWindow.HandleVoted(checkedItem.IdAnswer);
+            }
 
         }
     }

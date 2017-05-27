@@ -31,7 +31,7 @@ namespace Surveys.Views
 
         public void LoadSurveys()
         {
-            var surveyService = new Services.InMemorySurveyService();
+            var surveyService = new Services.SurveyService();
             var items = surveyService.GetSurveys();
             surveys.Items.Clear();
             items.ForEach(f => surveys.Items.Add(f));
