@@ -20,7 +20,7 @@
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
             <DockPanel Grid.Row="0">
-                <local:SurveyListView/>
+                <local:SurveyListView />
             </DockPanel>
             <DockPanel Grid.Row="1">
                 <local:AnswersStatisticsView/>

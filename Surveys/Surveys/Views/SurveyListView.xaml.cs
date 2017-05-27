@@ -23,6 +23,7 @@ namespace Surveys.Views
         public SurveyListView()
         {
             InitializeComponent();
+            Enumerable.Range(0, 10).Select(s => new { Name = "Name " + s }).ToList().ForEach(f => surveys.Items.Add(f));
         }
 
         private void AddSurveyClick(object sender, RoutedEventArgs e)
