@@ -97,6 +97,11 @@
     <Compile Include="Services\Logger.cs" />
     <Compile Include="Services\SurveyService.cs" />
     <Compile Include="Utils\ForeachHelper.cs" />
+    <Compile Include="ViewModels\AddSurveyViewModel.cs" />
+    <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="Views\AddSurveyWindow.xaml.cs">
+      <DependentUpon>AddSurveyWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\AnswersStatisticsView.xaml.cs">
       <DependentUpon>AnswersStatisticsView.xaml</DependentUpon>
     </Compile>
@@ -107,6 +112,10 @@
     <Compile Include="Views\SurveyView.xaml.cs">
       <DependentUpon>SurveyView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\AddSurveyWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\AnswersStatisticsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -39,7 +39,15 @@ namespace Surveys.Views
 
         private void AddSurveyClick(object sender, RoutedEventArgs e)
         {
-
+            var window = new AddSurveyWindow();
+            window.Closed += (modelCloseSender, modalEvent) =>
+            {
+                if (window.AddedSurvey != null)
+                {
+                    surveys.Items.Add(new SurveyListItem { IdSurvey = window.AddedSurvey.IdSurvey, Name = window.AddedSurvey.Name });
+                }
+            };
+            window.ShowDialog();
         }
 
         private void SurveysSelectionChanged(object sender, SelectionChangedEventArgs e)

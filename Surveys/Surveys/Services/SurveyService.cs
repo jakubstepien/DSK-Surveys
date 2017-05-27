@@ -66,19 +66,22 @@ namespace Surveys.Services
                 var surveys = db.Survey
                     .Where(w => w.IdSurvey == id)
                     .Join(db.Answer, l => l.IdSurvey, r => r.IdSurvey, (l, r) => new { Survey = l, Answer = r })
-                    .Join(db.Vote, l => l.Answer.IdAnswer, r => r.IdAnswer, (l, r) => new { Survey = l.Survey, Answer = l.Answer, Vote = r })
+                    .GroupJoin(db.Vote, l => l.Answer.IdAnswer, r => r.IdAnswer, (l, r) => new { Survey = l.Survey, Answer = l.Answer, Vote = r })
+                    .SelectMany(s => s.Vote.DefaultIfEmpty(), (s, votes) => new { Survey = s.Survey, Answer = s.Answer, Vote = votes })
                     .GroupBy(g => new { g.Survey, g.Answer })
                     .Select(s => new
-                    {
-                        IdSurv = s.Key.Survey.IdSurvey,
-                        SurvName = s.Key.Survey.Name,
-                        SurvDescr = s.Key.Survey.Description,
-                        SurvEndDate = s.Key.Survey.EndDateUTC,
+                     {
+                         IdSurv = s.Key.Survey.IdSurvey,
+                         SurvName = s.Key.Survey.Name,
+                         SurvDescr = s.Key.Survey.Description,
+                         SurvEndDate = s.Key.Survey.EndDateUTC,
 
-                        AnswerModel = s.Key.Answer,
-                        Votes = s.Count()
-                    });
+                         AnswerModel = s.Key.Answer,
+                         Votes = s.Count(a => a.Vote != null)
+                     });
                 var queryReuslt = surveys.ToList();
+                var test = surveys.ToString();
+
                 if (queryReuslt.Count == 0)
                 {
                     return null;
