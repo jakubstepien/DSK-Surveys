@@ -55,20 +55,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AnswersStatisticsView.xaml.cs">
+    <Compile Include="Views\AnswersStatisticsView.xaml.cs">
       <DependentUpon>AnswersStatisticsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SurveyListView.xaml.cs">
+    <Compile Include="Views\SurveyListView.xaml.cs">
       <DependentUpon>SurveyListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SurveyView.xaml.cs">
+    <Compile Include="Views\SurveyView.xaml.cs">
       <DependentUpon>SurveyView.xaml</DependentUpon>
     </Compile>
-    <Page Include="AnswersStatisticsView.xaml">
+    <Page Include="Views\AnswersStatisticsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -76,15 +76,15 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="SurveyListView.xaml">
+    <Page Include="Views\SurveyListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SurveyView.xaml">
+    <Page Include="Views\SurveyView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

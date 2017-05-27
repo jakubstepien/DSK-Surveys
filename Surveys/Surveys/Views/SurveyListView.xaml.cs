@@ -13,19 +13,19 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Surveys
+namespace Surveys.Views
 {
     /// <summary>
-    /// Interaction logic for SurveyView.xaml
+    /// Interaction logic for SurveyListView.xaml
     /// </summary>
-    public partial class SurveyView : UserControl
+    public partial class SurveyListView : UserControl
     {
-        public SurveyView()
+        public SurveyListView()
         {
             InitializeComponent();
         }
 
-        private void SendClick(object sender, RoutedEventArgs e)
+        private void AddSurveyClick(object sender, RoutedEventArgs e)
         {
 
         }
