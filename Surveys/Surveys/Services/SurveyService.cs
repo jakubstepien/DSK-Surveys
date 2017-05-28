@@ -38,14 +38,14 @@ namespace Surveys.Services
             }
         }
 
-        public bool AddVote(VoteContract vote, bool myVote = false)
+        public bool AddVote(VoteContract vote)
         {
             try
             {
                 using (var db = new SurveyDbContext())
                 {
                     db.Vote.Add(new Data.Entities.Vote { IdVote = vote.IdVote, IdAnswer = vote.IdAnswer });
-                    if (myVote)
+                    if (vote.SenderId == App.AppId)
                     {
                         db.MyVotes.Add(new Data.Entities.MyVotes { IdAnswer = vote.IdAnswer, IdSurvey = vote.IdSurvey });
                     }

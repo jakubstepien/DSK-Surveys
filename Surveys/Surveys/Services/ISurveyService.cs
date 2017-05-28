@@ -10,7 +10,7 @@ namespace Surveys.Services
 {
     interface ISurveyService
     {
-        bool AddVote(VoteContract vote, bool myVote = false);
+        bool AddVote(VoteContract vote);
 
         bool AddSurvey(SurveyContract survey);
 

@@ -41,10 +41,15 @@ namespace Surveys.Views
             var checkedItem = answers.Items.OfType<Models.AnswerModel>().SingleOrDefault(s => s.IsChecked);
             if (checkedItem != null)
             {
-                MainWindow.Channel.Vote(new WCFServices.DataContracts.VoteContract { IdVote = Guid.NewGuid(), IdAnswer = checkedItem.IdAnswer, IdSurvey = checkedItem.IdSurvey });
+                MainWindow.Channel.Vote(new WCFServices.DataContracts.VoteContract
+                {
+                    IdVote = Guid.NewGuid(),
+                    IdAnswer = checkedItem.IdAnswer,
+                    IdSurvey = checkedItem.IdSurvey,
+                    SenderId = App.AppId
+                });
                 MainWindow.HandleVoted(checkedItem.IdAnswer);
             }
-
         }
     }
 }

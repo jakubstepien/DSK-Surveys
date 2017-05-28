@@ -18,5 +18,8 @@ namespace Surveys.WCFServices.DataContracts
 
         [DataMember]
         public Guid IdSurvey { get; set; }
+
+        [DataMember]
+        public Guid SenderId { get; set; }
     }
 }
