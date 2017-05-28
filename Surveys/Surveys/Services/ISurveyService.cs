@@ -10,9 +10,9 @@ namespace Surveys.Services
 {
     interface ISurveyService
     {
-        bool AddVote(VoteModel vote, bool myVote = false);
+        bool AddVote(VoteContract vote);
 
-        bool AddSurvey(SurveyModel survey);
+        bool AddSurvey(SurveyContract survey);
 
         IEnumerable<SurveyListItem> GetSurveys();
 
