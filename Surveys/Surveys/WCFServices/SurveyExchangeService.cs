@@ -61,13 +61,13 @@ namespace Surveys.WCFServices
         public void Vote(VoteContract msg)
         {
             var service = new Services.SurveyService();
-            service.AddVote(msg.GetModel());
+            service.AddVote(msg);
         }
 
         public void AddSurvey(SurveyContract survey)
         {
             var service = new Services.SurveyService();
-            service.AddSurvey(survey.GetModel());
+            service.AddSurvey(survey);
         }
 
         public void Join(Guid id)

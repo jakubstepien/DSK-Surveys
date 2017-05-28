@@ -11,7 +11,7 @@ namespace Surveys.Services
 {
     class SurveyService : ISurveyService
     {
-        public bool AddSurvey(SurveyModel survey)
+        public bool AddSurvey(SurveyContract survey)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace Surveys.Services
             }
         }
 
-        public bool AddVote(VoteModel vote, bool myVote = false)
+        public bool AddVote(VoteContract vote, bool myVote = false)
         {
             try
             {
