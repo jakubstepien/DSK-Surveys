@@ -11,6 +11,9 @@ namespace Surveys.Data.Entities
     class MyVotes
     {
         [Key]
+        public int Id { get; set; }
+
+        [Index]
         public Guid IdSurvey { get; set; }
 
         [Index]

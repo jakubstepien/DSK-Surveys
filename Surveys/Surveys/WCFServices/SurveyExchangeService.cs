@@ -36,7 +36,6 @@ namespace Surveys.WCFServices
             
             channelFactory = new ChannelFactory<ISurveyExchangeService>("SurveyExchangeServiceEndpoint");
             Channel = channelFactory.CreateChannel();
-            System.Diagnostics.Debug.WriteLine(DateTime.Now);
 
             //żaden event na host ani channel nie zwraca od kiedy service działa
             Thread.Sleep(2000);
@@ -72,8 +71,6 @@ namespace Surveys.WCFServices
 
         public void Join(Guid id)
         {
-
-            System.Diagnostics.Debug.WriteLine(DateTime.Now);
             knownHosts.Add(id);
             Channel.Greet(new DirectedContract<Guid> { Target = id, Data = App.AppId });
         }

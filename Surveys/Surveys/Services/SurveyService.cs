@@ -111,13 +111,24 @@ namespace Surveys.Services
                 {
                     return null;
                 }
+
+                //Po wyłączeniu głosowanie pare razy zmienić na SingleOrDefault
+                var selectedAnswer = db.MyVotes.AsNoTracking().Where(s => s.IdSurvey == id).Select(s => s.IdAnswer).FirstOrDefault();
+
                 var survey = new SurveyModel
                 {
                     IdSurvey = queryReuslt[0].IdSurv,
                     Name = queryReuslt[0].SurvName,
                     Description = queryReuslt[0].SurvDescr,
                     EndDateUTC = queryReuslt[0].SurvEndDate,
-                    Answers = queryReuslt.Select(s => new AnswerModel { IdAnswer = s.AnswerModel.IdAnswer, Text = s.AnswerModel.Text, Votes = s.Votes, IdSurvey = s.IdSurv })
+                    Answers = queryReuslt.Select(s => new AnswerModel
+                    {
+                        IdAnswer = s.AnswerModel.IdAnswer,
+                        Text = s.AnswerModel.Text,
+                        Votes = s.Votes,
+                        IdSurvey = s.IdSurv,
+                        IsChecked = s.AnswerModel.IdAnswer == selectedAnswer
+                    })
                 };
                 return survey;
             }
