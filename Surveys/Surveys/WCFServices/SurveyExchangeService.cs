@@ -19,7 +19,6 @@ namespace Surveys.WCFServices
         ChannelFactory<ISurveyExchangeService> channelFactory = null;
         #endregion
 
-        private Guid hostId = Guid.NewGuid();
         private HashSet<Guid> knownHosts = new HashSet<Guid>();
         public int HostNumber { get { return knownHosts.Count; } }
 
@@ -41,14 +40,14 @@ namespace Surveys.WCFServices
 
             //żaden event na host ani channel nie zwraca od kiedy service działa
             Thread.Sleep(2000);
-            Channel.Join(hostId);
+            Channel.Join(App.AppId);
         }
 
         public void StopService()
         {
             if (host != null)
             {
-                Channel.Exit(hostId);
+                Channel.Exit(App.AppId);
                 if (host.State != CommunicationState.Closed)
                 {
                     channelFactory.Close();
@@ -76,7 +75,7 @@ namespace Surveys.WCFServices
 
             System.Diagnostics.Debug.WriteLine(DateTime.Now);
             knownHosts.Add(id);
-            Channel.Greet(new DirectedContract<Guid> { Target = id, Data = hostId });
+            Channel.Greet(new DirectedContract<Guid> { Target = id, Data = App.AppId });
         }
 
         public void Greet(DirectedContract<Guid> greeting)
@@ -84,7 +83,7 @@ namespace Surveys.WCFServices
             //Join przeważnie nie zostaje wyłapany przez inne hosty a great już tak więc słuchamy nawet na te nie do tego klienta
             if (!knownHosts.Contains(greeting.Data))
             {
-                Channel.Greet(new DirectedContract<Guid> { Data = hostId, Target = greeting.Data });
+                Channel.Greet(new DirectedContract<Guid> { Data = App.AppId, Target = greeting.Data });
                 knownHosts.Add(greeting.Data);
             }
 

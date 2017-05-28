@@ -13,5 +13,6 @@ namespace Surveys
     /// </summary>
     public partial class App : Application
     {
+        public static readonly Guid AppId = Guid.NewGuid();
     }
 }
