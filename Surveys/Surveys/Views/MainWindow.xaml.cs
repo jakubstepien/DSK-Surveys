@@ -2,9 +2,11 @@
 using Surveys.WCFServices;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -30,6 +32,10 @@ namespace Surveys.Views
 
         public MainWindow()
         {
+            CultureInfo culture = new CultureInfo("pl-PL");
+            Thread.CurrentThread.CurrentCulture = culture;
+            Thread.CurrentThread.CurrentUICulture = culture;
+
             serv.StartService();
             Closing += (sender, e) =>
             {

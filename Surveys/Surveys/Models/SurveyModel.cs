@@ -14,7 +14,20 @@ namespace Surveys.Models
 
         public string Description { get; set; }
 
-        public DateTime EndDateUTC { get; set; }
+        private DateTime endDateUTC;
+        public DateTime EndDateUTC
+        {
+            get { return endDateUTC; }
+            set
+            {
+                //EF zwraca unspecified który jest local
+                if(value.Kind == DateTimeKind.Unspecified || value.Kind == DateTimeKind.Local)
+                {
+                    value = value.ToUniversalTime();
+                }
+                endDateUTC = value;
+            }
+        }
 
         public IEnumerable<AnswerModel> Answers { get; set; }
     }

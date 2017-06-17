@@ -42,6 +42,7 @@ namespace Surveys.Views
                 var span = currentSurveyEnd.Value - currTime;
                 if (currTime > currentSurveyEnd)
                 {
+                    currentSurveyEnd = null;
                     //blokada przycisku
                 }
                 else

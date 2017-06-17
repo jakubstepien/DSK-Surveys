@@ -3,7 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wpfExtension="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
         xmlns:local="clr-namespace:Surveys.Views"
+        xmlns:validationRules="clr-namespace:Surveys.Utils.ValidationRules"
         mc:Ignorable="d"
         Title="Dodaj ankiete" Height="300" Width="300">
     <Grid>
@@ -21,17 +23,64 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Grid.Column="0">
                 <Label Content="Nazwa ankiety" />
             </StackPanel>
             <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
-                <TextBox x:Name="surveyName"/>
+                <TextBox x:Name="surveyName">
+                    <TextBox.Text>
+                        <Binding Path="Name" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <validationRules:NotEmptyValidation />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
             </StackPanel>
             <StackPanel Grid.Row="1" Grid.Column="0">
-                <Label Content="Pytanie" />
+                <Label Content="Data końca ankiety" />
             </StackPanel>
             <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
+                <DatePicker x:Name="surveyEndDate" >
+                    <DatePicker.Resources>
+                        <Style TargetType="DatePickerTextBox">
+                            <Setter Property="Text" Value="Wybierz datę"/>
+                        </Style>
+                    </DatePicker.Resources>
+                </DatePicker>
+            </StackPanel>
+            <StackPanel Grid.Row="2" Grid.Column="0">
+                <Label Content="Godzina końca ankiety" />
+            </StackPanel>
+            <StackPanel Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Orientation="Horizontal">
+                <TextBox x:Name="surveyEndHour" Width="20" VerticalAlignment="Center">
+                    <TextBox.Text>
+                        <Binding Path="Hour" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <validationRules:IntRangeValidation Max="23" Min="0"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <Label Content=":" />
+                <TextBox x:Name="surveyEndMin" Width="20" VerticalAlignment="Center">
+                    <TextBox.Text>
+                        <Binding Path="Minute" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <validationRules:IntRangeValidation Max="59" Min="0"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+            </StackPanel>
+            <StackPanel Grid.Row="3" Grid.Column="0">
+                <Label Content="Pytanie" />
+            </StackPanel>
+            <StackPanel Grid.Row="3" Grid.Column="1" VerticalAlignment="Center">
                 <TextBox x:Name="surveyDescription" />
             </StackPanel>
         </Grid>
@@ -39,8 +88,8 @@
             <Label Content="Odpowiedzi" />
         </StackPanel>
         <DataGrid Grid.Row="2" x:Name="answersGrid" ItemsSource="{Binding Items}" AutoGenerateColumns="False" HorizontalAlignment="Center">
-            <DataGrid.Columns>
-                <DataGridTextColumn Width="*" Binding="{Binding Text}"/>
+            <DataGrid.Columns >
+                <DataGridTextColumn Width="*" Binding="{Binding Text, ValidatesOnDataErrors=True}" />
             </DataGrid.Columns>
         </DataGrid>
         <StackPanel Grid.Row="3">

@@ -1,4 +1,5 @@
 ﻿using Surveys.Models;
+using Surveys.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -34,21 +35,28 @@ namespace Surveys.Views
         {
             if (CanAdd())
             {
-                var id = Guid.NewGuid();
-                var answers = (DataContext as ViewModels.AddSurveyViewModel).Items.Select(s => new AnswerModel { IdSurvey = id, IdAnswer = Guid.NewGuid(), Text = s.Text, Votes = 0 }).ToArray();
-                AddedSurvey = new SurveyModel
+                try
                 {
-                    IdSurvey = Guid.NewGuid(),
-                    Description = surveyDescription.Text,
-                    Name = surveyName.Text,
-                    EndDateUTC = DateTime.Now.AddYears(10),
-                    Answers = answers
-                };
-                this.Close();
-            }
-            else
-            {
-                //TODO
+                    var id = Guid.NewGuid();
+                    var slectedDate = surveyEndDate.SelectedDate.Value;
+                    var endDate = new DateTime(slectedDate.Year, slectedDate.Month, slectedDate.Day, int.Parse(surveyEndHour.Text), int.Parse(surveyEndMin.Text), 0);
+                    var answers = (DataContext as ViewModels.AddSurveyViewModel).Items.Select(s => new AnswerModel { IdSurvey = id, IdAnswer = Guid.NewGuid(), Text = s.Text, Votes = 0 }).ToArray();
+                    AddedSurvey = new SurveyModel
+                    {
+                        IdSurvey = Guid.NewGuid(),
+                        Description = surveyDescription.Text,
+                        Name = surveyName.Text,
+                        EndDateUTC = endDate.ToUniversalTime(),
+                        Answers = answers
+                    };
+                    this.Close();
+                    return;
+                }
+                catch(Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+               
             }
         }
 
@@ -63,7 +71,33 @@ namespace Surveys.Views
             if ((DataContext as ViewModels.AddSurveyViewModel).Items.Count == 0)
                 return false;
 
+            if (!surveyEndDate.SelectedDate.HasValue)
+                return false;
+
             return true;
+        }
+
+        private void HourValidation(object sender, TextCompositionEventArgs e)
+        {
+            ValidateTextboxIntRange(0, 23, e);
+        }
+
+        private void MinValidation(object sender, TextCompositionEventArgs e)
+        {
+            ValidateTextboxIntRange(0, 59, e);
+        }
+
+        private static void ValidateTextboxIntRange(int min, int max, TextCompositionEventArgs e)
+        {
+            int minutes = 0;
+            if (int.TryParse(e.Text, out minutes))
+            {
+                e.Handled = minutes >= min && minutes <= max;
+            }
+            else
+            {
+                e.Handled = false;
+            }
         }
     }
 }
