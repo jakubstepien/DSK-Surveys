@@ -34,7 +34,7 @@ namespace Surveys.WCFServices
             host.CloseTimeout = TimeSpan.FromMilliseconds(1);
             host.Open(TimeSpan.FromDays(100));
 
-            
+
             channelFactory = new ChannelFactory<ISurveyExchangeService>("SurveyExchangeServiceEndpoint");
             Channel = channelFactory.CreateChannel();
 
@@ -72,9 +72,11 @@ namespace Surveys.WCFServices
 
         public void Join(Guid id)
         {
+
             knownHosts.Add(id);
             Channel.Greet(new DirectedContract<Guid> { Target = id, Data = App.AppId });
             SendCurrentSurveysToNewHost(id);
+
         }
 
         public void Greet(DirectedContract<Guid> greeting)
@@ -91,10 +93,13 @@ namespace Surveys.WCFServices
 
         private void SendCurrentSurveysToNewHost(Guid targetId)
         {
-            var service = new Services.SurveyService();
-            var currentSurveys = service.GetCurrentSurveys(App.AppId);
-            currentSurveys.Target = targetId;
-            Channel.CurrentSurveys(currentSurveys);
+            if (targetId != App.AppId)
+            {
+                var service = new SurveyService();
+                var currentSurveys = service.GetCurrentSurveys(App.AppId);
+                currentSurveys.Target = targetId;
+                Channel.CurrentSurveys(currentSurveys);
+            }
         }
 
         public void Exit(Guid id)
@@ -104,7 +109,7 @@ namespace Surveys.WCFServices
 
         public void CurrentSurveys(CurrentSurveysContract surveys)
         {
-            if(surveys.Target == App.AppId)
+            if (surveys.Target == App.AppId)
             {
                 var service = new Services.SurveyService();
                 surveys.Surveys.ForEach(survey =>
@@ -121,7 +126,7 @@ namespace Surveys.WCFServices
         public void SurveyResult(CalculatedResult result)
         {
             var service = new SurveyService();
-            service.AddResult(result);
+            service.AddResult(result).RunSynchronously();
         }
     }
 }
