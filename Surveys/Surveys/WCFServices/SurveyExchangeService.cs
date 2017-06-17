@@ -120,13 +120,17 @@ namespace Surveys.WCFServices
                 {
                     service.AddVote(vote);
                 });
+                surveys.Results.ForEach(result =>
+                {
+                    service.AddResult(result);
+                });
             }
         }
 
         public void SurveyResult(CalculatedResult result)
         {
             var service = new SurveyService();
-            service.AddResult(result).RunSynchronously();
+            service.AddResult(result);
         }
     }
 }

@@ -15,5 +15,8 @@ namespace Surveys.WCFServices.DataContracts
 
         [DataMember]
         public VoteContract[] Votes { get; set; }
+
+        [DataMember]
+        public CalculatedResult[] Results { get; set; }
     }
 }

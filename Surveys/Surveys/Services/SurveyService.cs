@@ -56,10 +56,10 @@ namespace Surveys.Services
                     .Join(db.Vote, a => a.IdAnswer, v => v.IdAnswer, (a, v) => new { Answer = a, Vote = v })
                     .GroupBy(g => g.Answer)
                     .Select(s => new Result { IdAnswer = s.Key.IdAnswer, Votes = s.Count() });
-                var votes = votesQuery.ToArray();
+                var votes = await votesQuery.ToArrayAsync();
                 result.Result = votes;
             }
-            await AddResult(result);
+            AddResult(result);
             return result;
         }
 
@@ -131,10 +131,17 @@ namespace Surveys.Services
 
                         Answers = s.Select(a => new AnswerContract { Text = a.Answer.Text, IdAnswer = a.Answer.IdAnswer, IdSurvey = a.Answer.IdAnswer }),
                     }).ToArray();
+
+                var results = db.CalculatedResult.AsNoTracking()
+                   .ToArray()
+                   .Select(s => new CalculatedResult { IdSurvey = s.IdSurvey, ClientId = s.ClientIdentifier, Result = s.Result.Deserialize<Result[]>() })
+                   .ToArray();
+
+
                 var votes = db.Vote.AsNoTracking().Select(s => new { IdAnswer = s.IdAnswer, IdVote = s.IdVote, SenderId = senderId }).ToArray();
                 var surveyContracts = surveys.Select(s => new SurveyContract { Answers = s.Answers.ToArray(), Description = s.Description, EndDateUTC = s.EndDateUTC, IdSurvey = s.IdSurvey, Name = s.Name }).ToArray();
                 var votesContracts = votes.Select(s => new VoteContract { IdAnswer = s.IdAnswer, IdVote = s.IdVote, SenderId = s.SenderId }).ToArray();
-                return new CurrentSurveysContract { Surveys = surveyContracts, Votes = votesContracts };
+                return new CurrentSurveysContract { Surveys = surveyContracts, Votes = votesContracts, Results = results };
             }
         }
 
@@ -199,7 +206,7 @@ namespace Surveys.Services
             }
         }
 
-        public async Task AddResult(CalculatedResult result)
+        public void AddResult(CalculatedResult result)
         {
             using (var db = new SurveyDbContext())
             {
@@ -213,7 +220,7 @@ namespace Surveys.Services
                         IdCalculatedResult = Guid.NewGuid(),
                         Result = answersXml
                     });
-                    await db.SaveChangesAsync();
+                    db.SaveChanges();
                 }
             }
         }
@@ -225,7 +232,7 @@ namespace Surveys.Services
             {
                 List<Guid> ids;
                 //podiberanie z 30 sek opoznienia
-                var date = DateTime.UtcNow.AddSeconds(-30);
+                var date = DateTime.Now.AddSeconds(-30);
                 var query = db.Survey.AsNoTracking()
                     .Where(w => w.EndDateUTC < date)
                     .Where(w => !db.CalculatedResult.Any(a => a.IdSurvey == w.IdSurvey && a.ClientIdentifier == clientId))
