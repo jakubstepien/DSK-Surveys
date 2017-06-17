@@ -88,8 +88,13 @@
             <Label Content="Odpowiedzi" />
         </StackPanel>
         <DataGrid Grid.Row="2" x:Name="answersGrid" ItemsSource="{Binding Items}" AutoGenerateColumns="False" HorizontalAlignment="Center">
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="ValidationErrorTemplate" Value="{x:Null}"/>
+                </Style>
+            </DataGrid.RowStyle>
             <DataGrid.Columns >
-                <DataGridTextColumn Width="*" Binding="{Binding Text, ValidatesOnDataErrors=True}" />
+                <DataGridTextColumn Width="*" Binding="{Binding Text, ValidatesOnDataErrors=True, Mode=TwoWay}" />
             </DataGrid.Columns>
         </DataGrid>
         <StackPanel Grid.Row="3">
