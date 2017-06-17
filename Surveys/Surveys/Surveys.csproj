@@ -68,6 +68,7 @@
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.105.1\lib\net451\System.Data.SQLite.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml" />
@@ -113,6 +114,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data\Entities\Answer.cs" />
+    <Compile Include="Data\Entities\CalculatedResult.cs" />
     <Compile Include="Data\Entities\ErrorLog.cs" />
     <Compile Include="Data\Entities\MyVotes.cs" />
     <Compile Include="Data\Entities\Survey.cs" />
@@ -125,6 +127,7 @@
     <Compile Include="Models\VoteModel.cs" />
     <Compile Include="Services\ISurveyService.cs" />
     <Compile Include="Services\Logger.cs" />
+    <Compile Include="Services\MacAdressService.cs" />
     <Compile Include="Services\SurveyService.cs" />
     <Compile Include="Utils\ContractModelConverter.cs" />
     <Compile Include="Utils\ForeachHelper.cs" />

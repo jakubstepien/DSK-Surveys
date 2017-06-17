@@ -27,12 +27,15 @@ namespace Surveys.Data
 
         public DbSet<ErrorLog> ErrorLog { get; set; }
 
+        public DbSet<CalculatedResult> CalculatedResult { get; set; }
+
         #endregion
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             var sqliteConnectionInitializer = new SqliteDropCreateDatabaseWhenModelChanges<SurveyDbContext>(modelBuilder);
             Database.SetInitializer(sqliteConnectionInitializer);
+
         }
     }
 

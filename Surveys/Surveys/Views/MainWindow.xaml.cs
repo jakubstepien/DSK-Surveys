@@ -32,6 +32,8 @@ namespace Surveys.Views
 
         public MainWindow()
         {
+            //MessageBox.Show(new Services.MacAdressService().GetMacAdress());
+
             CultureInfo culture = new CultureInfo("pl-PL");
             Thread.CurrentThread.CurrentCulture = culture;
             Thread.CurrentThread.CurrentUICulture = culture;
