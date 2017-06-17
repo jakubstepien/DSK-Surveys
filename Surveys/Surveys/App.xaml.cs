@@ -14,5 +14,13 @@ namespace Surveys
     public partial class App : Application
     {
         public static readonly Guid AppId = Guid.NewGuid();
+
+        public static readonly string ClientIdentifier;
+
+        static App()
+        {
+            //ClientIdentifier = new Services.MacAdressService().GetMacAdress();
+            ClientIdentifier = AppId.ToString();
+        }
     }
 }

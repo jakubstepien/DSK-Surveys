@@ -33,7 +33,7 @@ namespace Surveys.Views
         public MainWindow()
         {
             //MessageBox.Show(new Services.MacAdressService().GetMacAdress());
-
+            this.Title = "DKS - Surveys client:" + App.ClientIdentifier;
             CultureInfo culture = new CultureInfo("pl-PL");
             Thread.CurrentThread.CurrentCulture = culture;
             Thread.CurrentThread.CurrentUICulture = culture;

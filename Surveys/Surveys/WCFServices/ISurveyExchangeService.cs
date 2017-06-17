@@ -20,10 +20,6 @@ namespace Surveys.WCFServices
         [OperationContract(IsOneWay = true)]
         void Join(Guid id);
 
-        /// <summary>
-        /// Sends Guid with endpoint id to other endpoint
-        /// </summary>
-        /// <param name="greeting"></param>
         [OperationContract(IsOneWay = true)]
         void Greet(DirectedContract<Guid> greeting);
 
@@ -31,6 +27,10 @@ namespace Surveys.WCFServices
         void CurrentSurveys(CurrentSurveysContract surveys);
 
         [OperationContract(IsOneWay = true)]
+        void SurveyResult(CalculatedResult result);
+
+        [OperationContract(IsOneWay = true)]
         void Exit(Guid id);
+
     }
 }

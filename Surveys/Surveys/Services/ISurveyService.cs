@@ -22,5 +22,7 @@ namespace Surveys.Services
 
         CurrentSurveysContract GetCurrentSurveys(Guid senderId);
 
+        void AddResult(CalculatedResult result);
+
     }
 }

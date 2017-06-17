@@ -23,6 +23,7 @@ namespace Surveys.Views
     public partial class AnswersStatisticsView : UserControl
     {
         Guid? surveyId = null;
+        DateTime? endDate = null;
 
         public AnswersStatisticsView()
         {
@@ -41,9 +42,23 @@ namespace Surveys.Views
         public void LoadSurvey(SurveyModel survey)
         {
             surveyId = survey.IdSurvey;
+            endDate = survey.EndDateUTC;
+            calculatedResults.Text = string.Empty;
             statisticsList.Items.Clear();
             var answers = survey.Answers.OrderByDescending(o => o.Votes).Select(s => new StatiscticModel { Text = s.Text, Votes = s.Votes, AnswerId = s.IdAnswer });
             answers.ForEach(f => statisticsList.Items.Add(f));
+            GetTotalResults(answers);
+        }
+
+        private void GetTotalResults(IEnumerable<StatiscticModel> answers)
+        {
+            var answersMap = answers.ToDictionary(a => a.AnswerId);
+            if (endDate < DateTime.UtcNow)
+            {
+                var calculatedResult = new Services.SurveyService().GetResults(surveyId.Value);
+                var text = calculatedResult.Select(s => s.ClientId + ":" + Environment.NewLine + string.Join(Environment.NewLine + "\t", s.Result.Select(r => answersMap[r.IdAnswer].Text + " - " + r.Votes)));
+                calculatedResults.Text = string.Join(Environment.NewLine, text);
+            }
         }
 
         public void ReloadResults()
@@ -55,6 +70,7 @@ namespace Surveys.Views
                 var answers = service.GetAnswers(surveyId.Value);
                 answers.ForEach(f => statisticsList.Items.Add(new StatiscticModel { Text = f.Text, Votes = f.Votes, AnswerId = f.IdAnswer }));
                 statisticsList.Items.Refresh();
+                GetTotalResults(statisticsList.Items.OfType< StatiscticModel>());
             }
         }
 

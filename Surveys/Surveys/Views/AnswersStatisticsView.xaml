@@ -9,7 +9,8 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Content="Statystyka odpowiedzi" />
         <ListView Grid.Row="1" x:Name="statisticsList" BorderThickness="0">
@@ -19,5 +20,9 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        <TextBox AcceptsReturn="True" AcceptsTab="True" Grid.Row="3" x:Name="calculatedResults"
+                 ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+            
+        </TextBox>
     </Grid>
 </UserControl>

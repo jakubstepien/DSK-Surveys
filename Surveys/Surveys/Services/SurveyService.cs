@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 using Surveys.Models;
 using Surveys.Data;
 using Surveys.WCFServices.DataContracts;
+using Surveys.Utils;
 
 namespace Surveys.Services
 {
     class SurveyService : ISurveyService
     {
+
+
         public bool AddSurvey(SurveyContract survey)
         {
             try
@@ -40,6 +43,24 @@ namespace Surveys.Services
                 Logger.Log(e);
                 return false;
             }
+        }
+
+        public CalculatedResult CalculateResult(Guid surveyId)
+        {
+            CalculatedResult result = new CalculatedResult { IdSurvey = surveyId, ClientId = App.ClientIdentifier, IdApp = App.AppId };
+            using (var db = new SurveyDbContext())
+            {
+                var votesQuery = db.Answer.AsNoTracking()
+                    .Where(w => w.IdSurvey == surveyId)
+                    .Join(db.Vote, a => a.IdAnswer, v => v.IdAnswer, (a, v) => new { Answer = a, Vote = v })
+                    .GroupBy(g => g.Answer)
+                    .Select(s => new Result { IdAnswer = s.Key.IdAnswer, Votes = s.Count() });
+                var votes = votesQuery.ToArray();
+                result.Result = votes;
+
+            }
+            AddResult(result);
+            return result;
         }
 
         public bool AddVote(VoteContract vote)
@@ -175,6 +196,36 @@ namespace Surveys.Services
 
                 var surveys = db.Survey.AsNoTracking().Select(s => new SurveyListItem { IdSurvey = s.IdSurvey, Name = s.Name }).ToArray();
                 return surveys;
+            }
+        }
+
+        public void AddResult(CalculatedResult result)
+        {
+            using (var db = new SurveyDbContext())
+            {
+                if (!db.CalculatedResult.Any(a => a.ClientIdentifier == result.ClientId && a.IdSurvey == result.IdSurvey))
+                {
+                    var answersXml = result.Result.Serialize();
+                    db.CalculatedResult.Add(new Data.Entities.CalculatedResult
+                    {
+                        IdSurvey = result.IdSurvey,
+                        ClientIdentifier = result.ClientId,
+                        IdCalculatedResult = Guid.NewGuid(),
+                        Result = answersXml
+                    });
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        public CalculatedResult[] GetResults(Guid surveyId)
+        {
+            using (var db = new SurveyDbContext())
+            {
+                var results = db.CalculatedResult.AsNoTracking()
+                    .Where(w => w.IdSurvey == surveyId)
+                    .ToArray();
+                return results.Select(s => new CalculatedResult { IdSurvey = s.IdSurvey, ClientId = s.ClientIdentifier, Result = s.Result.Deserialize<Result[]>()}).ToArray();
             }
         }
     }

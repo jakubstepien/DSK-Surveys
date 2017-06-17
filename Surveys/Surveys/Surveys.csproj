@@ -130,6 +130,7 @@
     <Compile Include="Services\MacAdressService.cs" />
     <Compile Include="Services\SurveyService.cs" />
     <Compile Include="Utils\ContractModelConverter.cs" />
+    <Compile Include="Utils\DataContractSerialization.cs" />
     <Compile Include="Utils\ForeachHelper.cs" />
     <Compile Include="Utils\ValidationRules\IntRangeValidation.cs" />
     <Compile Include="Utils\ValidationRules\NotEmptyValidation.cs" />
@@ -149,6 +150,7 @@
       <DependentUpon>SurveyView.xaml</DependentUpon>
     </Compile>
     <Compile Include="WCFServices\DataContracts\AnswerContract.cs" />
+    <Compile Include="WCFServices\DataContracts\CalculatedResult.cs" />
     <Compile Include="WCFServices\DataContracts\CurrentSurveysContract.cs" />
     <Compile Include="WCFServices\DataContracts\DirectedContract.cs" />
     <Compile Include="WCFServices\DataContracts\SurveyContract.cs" />

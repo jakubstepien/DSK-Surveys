@@ -1,4 +1,5 @@
-﻿using Surveys.Utils;
+﻿using Surveys.Services;
+using Surveys.Utils;
 using Surveys.WCFServices.DataContracts;
 using System;
 using System.Collections.Generic;
@@ -115,6 +116,12 @@ namespace Surveys.WCFServices
                     service.AddVote(vote);
                 });
             }
+        }
+
+        public void SurveyResult(CalculatedResult result)
+        {
+            var service = new SurveyService();
+            service.AddResult(result);
         }
     }
 }

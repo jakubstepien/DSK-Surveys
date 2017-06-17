@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Surveys.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,7 @@ namespace Surveys.Views
     {
         public IMainWindow MainWindow { get; set; }
         private DateTime? currentSurveyEnd;
+        private Guid surveyId;
 
         public SurveyView()
         {
@@ -43,7 +45,8 @@ namespace Surveys.Views
                 if (currTime > currentSurveyEnd)
                 {
                     currentSurveyEnd = null;
-                    //blokada przycisku
+                    var result = new SurveyService().CalculateResult(surveyId);
+                    MainWindow.Channel.SurveyResult(result);
                 }
                 else
                 {
@@ -60,6 +63,7 @@ namespace Surveys.Views
             answers.Items.Clear();
             survey.Answers.ForEach(f => answers.Items.Add(f));
             currentSurveyEnd = survey.EndDateUTC;
+            surveyId = survey.IdSurvey;
         }
 
         private void SendClick(object sender, RoutedEventArgs e)
