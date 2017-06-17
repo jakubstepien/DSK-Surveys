@@ -30,7 +30,7 @@ namespace Surveys.Views
             InitializeComponent();
             LoadSurveys();
             DispatcherTimer refreshListTimer = new DispatcherTimer();
-            refreshListTimer.Interval = TimeSpan.FromSeconds(30);
+            refreshListTimer.Interval = TimeSpan.FromSeconds(20);
             refreshListTimer.Tick += RefreshListTimer_Tick;
             refreshListTimer.Start();
         }

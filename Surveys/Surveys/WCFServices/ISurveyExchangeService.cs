@@ -28,6 +28,9 @@ namespace Surveys.WCFServices
         void Greet(DirectedContract<Guid> greeting);
 
         [OperationContract(IsOneWay = true)]
+        void CurrentSurveys(CurrentSurveysContract surveys);
+
+        [OperationContract(IsOneWay = true)]
         void Exit(Guid id);
     }
 }

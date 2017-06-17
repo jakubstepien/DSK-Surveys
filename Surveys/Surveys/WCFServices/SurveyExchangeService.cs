@@ -73,6 +73,7 @@ namespace Surveys.WCFServices
         {
             knownHosts.Add(id);
             Channel.Greet(new DirectedContract<Guid> { Target = id, Data = App.AppId });
+            SendCurrentSurveysToNewHost(id);
         }
 
         public void Greet(DirectedContract<Guid> greeting)
@@ -82,8 +83,17 @@ namespace Surveys.WCFServices
             {
                 Channel.Greet(new DirectedContract<Guid> { Data = App.AppId, Target = greeting.Data });
                 knownHosts.Add(greeting.Data);
+                SendCurrentSurveysToNewHost(greeting.Target);
             }
 
+        }
+
+        private void SendCurrentSurveysToNewHost(Guid targetId)
+        {
+            var service = new Services.SurveyService();
+            var currentSurveys = service.GetCurrentSurveys(App.AppId);
+            currentSurveys.Target = targetId;
+            Channel.CurrentSurveys(currentSurveys);
         }
 
         public void Exit(Guid id)
@@ -91,6 +101,20 @@ namespace Surveys.WCFServices
             knownHosts.Remove(id);
         }
 
-
+        public void CurrentSurveys(CurrentSurveysContract surveys)
+        {
+            if(surveys.Target == App.AppId)
+            {
+                var service = new Services.SurveyService();
+                surveys.Surveys.ForEach(survey =>
+                {
+                    service.AddSurvey(survey);
+                });
+                surveys.Votes.ForEach(vote =>
+                {
+                    service.AddVote(vote);
+                });
+            }
+        }
     }
 }
