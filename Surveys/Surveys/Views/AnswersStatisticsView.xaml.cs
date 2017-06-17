@@ -1,4 +1,5 @@
 ﻿using Surveys.Models;
+using Surveys.WCFServices.DataContracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,9 +35,9 @@ namespace Surveys.Views
             answersReloadTimer.Start();
         }
 
-        private void AnswersReloadTimer_Tick(object sender, EventArgs e)
+        private async void AnswersReloadTimer_Tick(object sender, EventArgs e)
         {
-            ReloadResults();
+            await ReloadResults();
         }
 
         public void LoadSurvey(SurveyModel survey)
@@ -56,21 +57,52 @@ namespace Surveys.Views
             if (endDate < DateTime.UtcNow)
             {
                 var calculatedResult = new Services.SurveyService().GetResults(surveyId.Value);
+                var intro = AreResultsSame(calculatedResult) ? "Wszystkie wezły zwróciły ten sam wynik" : "Węzły zwróciły różne wyniki";
                 var text = calculatedResult.Select(s => s.ClientId + ":" + Environment.NewLine + string.Join(Environment.NewLine + "\t", s.Result.Select(r => answersMap[r.IdAnswer].Text + " - " + r.Votes)));
-                calculatedResults.Text = string.Join(Environment.NewLine, text);
+                calculatedResults.Text = intro + Environment.NewLine + string.Join(Environment.NewLine, text);
             }
         }
 
-        public void ReloadResults()
+        private bool AreResultsSame(CalculatedResult[] results)
+        {
+            try
+            {
+                if (results.Length == 0)
+                {
+                    return true;
+                }
+                Dictionary<Guid, int> answerVotes = results[0].Result.ToDictionary(r => r.IdAnswer, r => r.Votes);
+                for (int i = 1; i < results.Length; i++)
+                {
+                    for (int j = 0; j < results[i].Result.Length; j++)
+                    {
+                        var currentResult = results[i].Result[j];
+                        if (answerVotes[currentResult.IdAnswer] != currentResult.Votes)
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+        }
+
+        public async Task ReloadResults()
         {
             if (surveyId.HasValue)
             {
                 statisticsList.Items.Clear();
                 var service = new Services.SurveyService();
-                var answers = service.GetAnswers(surveyId.Value);
+                var answers = await service.GetAnswers(surveyId.Value);
                 answers.ForEach(f => statisticsList.Items.Add(new StatiscticModel { Text = f.Text, Votes = f.Votes, AnswerId = f.IdAnswer }));
                 statisticsList.Items.Refresh();
-                GetTotalResults(statisticsList.Items.OfType< StatiscticModel>());
+                GetTotalResults(statisticsList.Items.OfType<StatiscticModel>());
             }
         }
 

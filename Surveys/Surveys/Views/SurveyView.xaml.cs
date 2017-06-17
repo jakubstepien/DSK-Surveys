@@ -45,8 +45,6 @@ namespace Surveys.Views
                 if (currTime > currentSurveyEnd)
                 {
                     currentSurveyEnd = null;
-                    var result = new SurveyService().CalculateResult(surveyId);
-                    MainWindow.Channel.SurveyResult(result);
                 }
                 else
                 {

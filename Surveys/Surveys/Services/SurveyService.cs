@@ -7,10 +7,11 @@ using Surveys.Models;
 using Surveys.Data;
 using Surveys.WCFServices.DataContracts;
 using Surveys.Utils;
+using System.Data.Entity;
 
 namespace Surveys.Services
 {
-    class SurveyService : ISurveyService
+    class SurveyService
     {
 
 
@@ -45,7 +46,7 @@ namespace Surveys.Services
             }
         }
 
-        public CalculatedResult CalculateResult(Guid surveyId)
+        public async Task<CalculatedResult> CalculateResult(Guid surveyId)
         {
             CalculatedResult result = new CalculatedResult { IdSurvey = surveyId, ClientId = App.ClientIdentifier, IdApp = App.AppId };
             using (var db = new SurveyDbContext())
@@ -57,9 +58,8 @@ namespace Surveys.Services
                     .Select(s => new Result { IdAnswer = s.Key.IdAnswer, Votes = s.Count() });
                 var votes = votesQuery.ToArray();
                 result.Result = votes;
-
             }
-            AddResult(result);
+            await AddResult(result);
             return result;
         }
 
@@ -89,7 +89,7 @@ namespace Surveys.Services
             }
         }
 
-        public IEnumerable<AnswerModel> GetAnswers(Guid surveyId)
+        public async Task<IEnumerable<AnswerModel>> GetAnswers(Guid surveyId)
         {
             using (var db = new SurveyDbContext())
             {
@@ -108,7 +108,7 @@ namespace Surveys.Services
                     })
                     .OrderByDescending(o => o.Votes);
 
-                return answers.ToArray();
+                return await answers.ToArrayAsync();
             }
         }
 
@@ -199,7 +199,7 @@ namespace Surveys.Services
             }
         }
 
-        public void AddResult(CalculatedResult result)
+        public async Task AddResult(CalculatedResult result)
         {
             using (var db = new SurveyDbContext())
             {
@@ -213,8 +213,24 @@ namespace Surveys.Services
                         IdCalculatedResult = Guid.NewGuid(),
                         Result = answersXml
                     });
-                    db.SaveChanges();
+                    await db.SaveChangesAsync();
                 }
+            }
+        }
+
+        public async Task<Guid[]> GetSurveysNeedingCalculating()
+        {
+            var clientId = App.ClientIdentifier;
+            using(var db = new SurveyDbContext())
+            {
+                List<Guid> ids;
+                //podiberanie z 30 sek opoznienia
+                var date = DateTime.UtcNow.AddSeconds(-30);
+                var query = db.Survey.AsNoTracking()
+                    .Where(w => w.EndDateUTC < date)
+                    .Where(w => !db.CalculatedResult.Any(a => a.IdSurvey == w.IdSurvey && a.ClientIdentifier == clientId))
+                    .Select(s => s.IdSurvey);
+                return await query.ToArrayAsync();
             }
         }
 

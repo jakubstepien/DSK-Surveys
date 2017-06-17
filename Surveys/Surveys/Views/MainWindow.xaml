@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Surveys.Views"
         mc:Ignorable="d"
-        Title="DSK - Ankiety" Height="550" Width="525">
+        Height="550" Width="525">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

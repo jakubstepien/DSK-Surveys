@@ -1,4 +1,5 @@
 ﻿using Surveys.Models;
+using Surveys.Services;
 using Surveys.WCFServices;
 using System;
 using System.Collections.Generic;
@@ -33,16 +34,12 @@ namespace Surveys.Views
         public MainWindow()
         {
             //MessageBox.Show(new Services.MacAdressService().GetMacAdress());
-            this.Title = "DKS - Surveys client:" + App.ClientIdentifier;
+            this.Title = "DKS - Ankiety client: " + App.ClientIdentifier;
             CultureInfo culture = new CultureInfo("pl-PL");
             Thread.CurrentThread.CurrentCulture = culture;
             Thread.CurrentThread.CurrentUICulture = culture;
 
             serv.StartService();
-            Closing += (sender, e) =>
-            {
-                serv.StopService();
-            };
 
             InitializeComponent();
             surveyView.Visibility = Visibility.Collapsed;
@@ -53,6 +50,25 @@ namespace Surveys.Views
             hostsInfoRefresh.Interval = TimeSpan.FromSeconds(5);
             hostsInfoRefresh.Tick += HostsInfoRefresh_Tick;
             hostsInfoRefresh.Start();
+
+            Timer timer = new Timer(CallculateResults, null, 0, 10000);
+
+            Closing += (sender, e) =>
+            {
+                serv.StopService();
+                timer.Dispose();
+            };
+        }
+
+        private async void CallculateResults(object oStateObject)
+        {
+            var service = new SurveyService();
+            var ids = await service.GetSurveysNeedingCalculating();
+            foreach(var id in ids)
+            {
+                var result = await service.CalculateResult(id);
+                Channel.SurveyResult(result);
+            }
         }
 
         private void HostsInfoRefresh_Tick(object sender, EventArgs e)

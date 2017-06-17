@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Surveys.Services
 {
-    class MacAdressService
+    class ClientIdService
     {
         public string GetMacAdress()
         {
