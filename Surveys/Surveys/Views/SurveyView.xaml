@@ -13,7 +13,10 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Label Grid.Row="0" x:Name="surveyName" Content="surveyName" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <DockPanel Grid.Row="0">
+            <Label x:Name="surveyName" Content="surveyName" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Label x:Name="surveyCountDownTimer" HorizontalAlignment="Right"/>
+        </DockPanel>
         <Label Grid.Row="1" x:Name="surveyDescription" Content="surveyDescription" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <ListView x:Name="answers" Grid.Row="2" BorderThickness="0" SelectionMode="Single">
             <ListView.ItemTemplate>
