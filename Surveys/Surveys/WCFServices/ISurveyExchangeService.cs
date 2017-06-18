@@ -18,7 +18,7 @@ namespace Surveys.WCFServices
         void AddSurvey(SurveyContract survey);
 
         [OperationContract(IsOneWay = true)]
-        void Join(Guid id);
+        void Ping(Guid id);
 
         [OperationContract(IsOneWay = true)]
         void Greet(DirectedContract<Guid> greeting);

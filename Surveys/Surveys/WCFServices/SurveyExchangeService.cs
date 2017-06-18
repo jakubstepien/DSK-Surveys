@@ -30,6 +30,7 @@ namespace Surveys.WCFServices
         #region ChannelMethods
         public void StartService()
         {
+            NetTcpBinding tcpBinding = new NetTcpBinding(SecurityMode.None);
             host = new ServiceHost(this);
             host.CloseTimeout = TimeSpan.FromMilliseconds(1);
             host.Open(TimeSpan.FromDays(100));
@@ -40,7 +41,7 @@ namespace Surveys.WCFServices
 
             //żaden event na host ani channel nie zwraca od kiedy service działa
             Thread.Sleep(2000);
-            Channel.Join(App.AppId);
+            Channel.Ping(App.AppId);
         }
 
         public void StopService()
@@ -70,13 +71,14 @@ namespace Surveys.WCFServices
             service.AddSurvey(survey);
         }
 
-        public void Join(Guid id)
+        public void Ping(Guid id)
         {
-
-            knownHosts.Add(id);
-            Channel.Greet(new DirectedContract<Guid> { Target = id, Data = App.AppId });
-            SendCurrentSurveysToNewHost(id);
-
+            if (!knownHosts.Contains(id))
+            {
+                knownHosts.Add(id);
+                Channel.Greet(new DirectedContract<Guid> { Target = id, Data = App.AppId });
+                SendCurrentSurveysToNewHost(id);
+            }
         }
 
         public void Greet(DirectedContract<Guid> greeting)

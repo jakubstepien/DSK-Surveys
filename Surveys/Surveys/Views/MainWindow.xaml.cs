@@ -51,13 +51,19 @@ namespace Surveys.Views
             hostsInfoRefresh.Tick += HostsInfoRefresh_Tick;
             hostsInfoRefresh.Start();
 
-            Timer timer = new Timer(CallculateResults, null, 0, 10000);
-
+            Timer resultsTimer = new Timer(CallculateResults, null, 0, 10000);
+            Timer pingingTimer = new Timer(Ping, null, 10000, 2000);
             Closing += (sender, e) =>
             {
                 serv.StopService();
-                timer.Dispose();
+                resultsTimer.Dispose();
+                pingingTimer.Dispose();
             };
+        }
+
+        private void Ping(object state)
+        {
+            Channel.Ping(App.AppId);
         }
 
         private async void CallculateResults(object oStateObject)
