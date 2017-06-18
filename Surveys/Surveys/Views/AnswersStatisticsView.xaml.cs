@@ -58,7 +58,7 @@ namespace Surveys.Views
             {
                 var calculatedResult = new Services.SurveyService().GetResults(surveyId.Value);
                 var intro = AreResultsSame(calculatedResult) ? "Wszystkie wezły zwróciły ten sam wynik" : "Węzły zwróciły różne wyniki";
-                var text = calculatedResult.Select(s => s.ClientId + ":" + Environment.NewLine + string.Join(Environment.NewLine + "\t", s.Result.Select(r => answersMap[r.IdAnswer].Text + " - " + r.Votes)));
+                var text = calculatedResult.Select(s => s.ClientId + ":" + Environment.NewLine +"\t" + string.Join(Environment.NewLine + "\t", s.Result.Select(r => answersMap[r.IdAnswer].Text + " - " + r.Votes)));
                 calculatedResults.Text = intro + Environment.NewLine + string.Join(Environment.NewLine, text);
             }
         }
