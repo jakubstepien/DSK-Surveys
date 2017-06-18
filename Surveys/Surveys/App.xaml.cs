@@ -19,8 +19,9 @@ namespace Surveys
 
         static App()
         {
-            //ClientIdentifier = new Services.MacAdressService().GetMacAdress();
-            ClientIdentifier = AppId.ToString();
+            //ClientIdentifier = new Services.ClientIdService().GetMacAdress();
+            //ClientIdentifier = AppId.ToString();
+            ClientIdentifier = new Services.ClientIdService().GetIp();
         }
     }
 }
