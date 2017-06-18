@@ -30,34 +30,44 @@ namespace Surveys.Views
         Guid? currentSurveyId;
         SurveyExchangeService serv = new SurveyExchangeService();
         public ISurveyExchangeService Channel => serv.Channel;
+        private static Mutex _mutex = null;
 
         public MainWindow()
         {
-            //MessageBox.Show(new Services.MacAdressService().GetMacAdress());
-            this.Title = "DKS - Ankiety client: " + App.ClientIdentifier;
-            CultureInfo culture = new CultureInfo("pl-PL");
-            Thread.CurrentThread.CurrentCulture = culture;
-            Thread.CurrentThread.CurrentUICulture = culture;
-
-            serv.StartService();
-
-            InitializeComponent();
-            surveyView.Visibility = Visibility.Collapsed;
-            surveyListView.MainWindow = this;
-            surveyView.MainWindow = this;
-
-            DispatcherTimer hostsInfoRefresh = new DispatcherTimer();
-            hostsInfoRefresh.Interval = TimeSpan.FromSeconds(5);
-            hostsInfoRefresh.Tick += HostsInfoRefresh_Tick;
-            hostsInfoRefresh.Start();
-
-            Timer timer = new Timer(CallculateResults, null, 0, 10000);
-
-            Closing += (sender, e) =>
+            const string appName = "DSK - ankiety";
+            bool createdNew;
+            _mutex = new Mutex(true, appName, out createdNew);
+            if (!createdNew)
             {
-                serv.StopService();
-                timer.Dispose();
-            };
+                Application.Current.Shutdown();
+            }
+            else
+            {
+                this.Title = "DKS - Ankiety client: " + App.ClientIdentifier;
+                CultureInfo culture = new CultureInfo("pl-PL");
+                Thread.CurrentThread.CurrentCulture = culture;
+                Thread.CurrentThread.CurrentUICulture = culture;
+
+                serv.StartService();
+
+                InitializeComponent();
+                surveyView.Visibility = Visibility.Collapsed;
+                surveyListView.MainWindow = this;
+                surveyView.MainWindow = this;
+
+                DispatcherTimer hostsInfoRefresh = new DispatcherTimer();
+                hostsInfoRefresh.Interval = TimeSpan.FromSeconds(5);
+                hostsInfoRefresh.Tick += HostsInfoRefresh_Tick;
+                hostsInfoRefresh.Start();
+
+                Timer timer = new Timer(CallculateResults, null, 0, 10000);
+
+                Closing += (sender, e) =>
+                {
+                    serv.StopService();
+                    timer.Dispose();
+                };
+            }
         }
 
         private async void CallculateResults(object oStateObject)
