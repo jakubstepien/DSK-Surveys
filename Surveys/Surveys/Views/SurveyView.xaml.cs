@@ -45,6 +45,7 @@ namespace Surveys.Views
                 if (currTime > currentSurveyEnd)
                 {
                     currentSurveyEnd = null;
+                    sendButton.IsEnabled = false;
                 }
                 else
                 {
@@ -56,19 +57,26 @@ namespace Surveys.Views
 
         public void LoadSurvey(Models.SurveyModel survey)
         {
+            currentSurveyEnd = survey.EndDateUTC;
             surveyName.Content = survey.Name;
             surveyDescription.Content = survey.Description;
             answers.Items.Clear();
             survey.Answers.ForEach(f => answers.Items.Add(f));
-            currentSurveyEnd = survey.EndDateUTC;
             surveyId = survey.IdSurvey;
+            sendButton.IsEnabled = !survey.Answers.Any(a => a.IsChecked);
+            var currTime = DateTime.UtcNow;
+            if (currTime > currentSurveyEnd)
+            {
+                sendButton.IsEnabled = false;
+            }
         }
 
         private void SendClick(object sender, RoutedEventArgs e)
         {
             var checkedItem = answers.Items.OfType<Models.AnswerModel>().SingleOrDefault(s => s.IsChecked);
-            if (checkedItem != null)
+            if (checkedItem != null && sendButton.IsEnabled)
             {
+                sendButton.IsEnabled = false;
                 MainWindow.Channel.Vote(new WCFServices.DataContracts.VoteContract
                 {
                     IdVote = Guid.NewGuid(),
