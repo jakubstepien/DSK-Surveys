@@ -34,10 +34,7 @@ namespace Surveys.Views
 
         public MainWindow()
         {
-            const string appName = "DSK - ankiety";
-            bool createdNew;
-            _mutex = new Mutex(true, appName, out createdNew);
-            if (!createdNew)
+            if (!CanRun())
             {
                 Application.Current.Shutdown();
             }
@@ -54,7 +51,6 @@ namespace Surveys.Views
                 surveyView.Visibility = Visibility.Collapsed;
                 surveyListView.MainWindow = this;
                 surveyView.MainWindow = this;
-
                 DispatcherTimer hostsInfoRefresh = new DispatcherTimer();
                 hostsInfoRefresh.Interval = TimeSpan.FromSeconds(5);
                 hostsInfoRefresh.Tick += HostsInfoRefresh_Tick;
@@ -71,9 +67,21 @@ namespace Surveys.Views
             }
         }
 
+        private bool CanRun()
+        {
+            const string appName = "DSK - ankiety";
+            bool createdNew;
+            _mutex = new Mutex(true, appName, out createdNew);
+            return createdNew;
+        }
+
         private void Ping(object state)
         {
-            Channel.Ping(App.AppId);
+            try
+            {
+                Channel.Ping(App.AppId);
+            }
+            catch(ObjectDisposedException e) { }
         }
 
         private async void CallculateResults(object oStateObject)
