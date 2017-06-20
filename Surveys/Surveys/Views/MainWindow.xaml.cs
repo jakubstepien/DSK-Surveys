@@ -58,17 +58,43 @@ namespace Surveys.Views
 
                 Timer resultsTimer = new Timer(CallculateResults, null, 0, 10000);
                 Timer pingingTimer = new Timer(Ping, null, 10000, 2000);
+                Timer peers = new Timer(Peers, null, 1000, 10000);
                 Closing += (sender, e) =>
                 {
                     serv.StopService();
                     resultsTimer.Dispose();
                     pingingTimer.Dispose();
+                    peers.Dispose();
                 };
             }
         }
 
+        private void Peers(object state)
+        {
+            if(serv.Peer != null)
+            {
+                var myRes = new System.Net.PeerToPeer.PeerNameResolver();
+                var recColl = myRes.Resolve(serv.Peer);
+                Console.WriteLine("Loose Rec Collection " + recColl.Count.ToString());
+
+                foreach (var record in recColl)
+                {
+                    Console.WriteLine("For peer named : " + record.PeerName);
+
+                    foreach (var endP in record.EndPointCollection)
+                    {
+                        Console.WriteLine("We have the following endpoint information logged : " + endP.ToString());
+                    }
+
+                    Console.WriteLine("----------------------------------------------------------------------------------");
+                }
+            }
+           
+        }
+
         private bool CanRun()
         {
+            return true;
             const string appName = "DSK - ankiety";
             bool createdNew;
             _mutex = new Mutex(true, appName, out createdNew);

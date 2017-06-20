@@ -4,6 +4,7 @@ using Surveys.WCFServices.DataContracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.PeerToPeer;
 using System.ServiceModel;
 using System.Text;
 using System.Threading;
@@ -16,6 +17,7 @@ namespace Surveys.WCFServices
     {
         #region ChannelFields
         public ISurveyExchangeService Channel { get; private set; }
+        public PeerName Peer { get; private set; }
         ServiceHost host = null;
         ChannelFactory<ISurveyExchangeService> channelFactory = null;
         #endregion
@@ -30,7 +32,14 @@ namespace Surveys.WCFServices
         #region ChannelMethods
         public void StartService()
         {
-            NetTcpBinding tcpBinding = new NetTcpBinding(SecurityMode.None);
+
+            Peer = new PeerName(App.ClientIdentifier, PeerNameType.Unsecured);
+            PeerNameRegistration registeration = new PeerNameRegistration(Peer, 3030);
+            registeration.Cloud = Cloud.Available;
+            registeration.Comment = App.AppId.ToString();
+            Console.WriteLine(string.Join(Environment.NewLine, Cloud.GetAvailableClouds().Select(s => "name: " +  s.Name + " scope: " + s.Scope)));
+            registeration.Start();
+
             host = new ServiceHost(this);
             host.CloseTimeout = TimeSpan.FromMilliseconds(1);
             host.Open(TimeSpan.FromDays(100));
@@ -42,6 +51,7 @@ namespace Surveys.WCFServices
             //żaden event na host ani channel nie zwraca od kiedy service działa
             Thread.Sleep(2000);
             Channel.Ping(App.AppId);
+            host.Closing += (sender, e) => registeration.Stop();
         }
 
         public void StopService()
