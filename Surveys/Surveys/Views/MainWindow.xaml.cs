@@ -94,7 +94,6 @@ namespace Surveys.Views
 
         private bool CanRun()
         {
-            return true;
             const string appName = "DSK - ankiety";
             bool createdNew;
             _mutex = new Mutex(true, appName, out createdNew);
